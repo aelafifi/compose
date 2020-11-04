@@ -38,6 +38,7 @@ from ..service import ConvergenceStrategy
 from ..service import ImageType
 from ..service import NeedsBuildError
 from ..service import OperationFailedError
+from ..gui import main as gui_main
 from .command import get_config_from_options
 from .command import project_from_options
 from .docopt_command import DocoptDispatcher
@@ -217,6 +218,7 @@ class TopLevelCommand:
       down               Stop and remove containers, networks, images, and volumes
       events             Receive real time events from containers
       exec               Execute a command in a running container
+      gui                Run GUI server
       help               Get help on a command
       images             List images
       kill               Kill containers
@@ -250,6 +252,18 @@ class TopLevelCommand:
     def toplevel_environment(self):
         environment_file = self.toplevel_options.get('--env-file')
         return Environment.from_env_file(self.project_dir, environment_file)
+
+    def gui(self, options):
+        """
+        Run GUI server.
+
+        Usage: gui [options] [--build-arg key=val...] [SERVICE...]
+
+        Options:
+            --port=8787              Compress the build context using gzip.
+        """
+
+        gui_main.main(self.project, options, self.toplevel_options)
 
     def build(self, options):
         """

@@ -10,6 +10,7 @@ include compose/config/*.json
 include compose/GITSHA
 recursive-include contrib/completion *
 recursive-include tests *
+recursive-include compose/gui/vue-gui/dist *
 global-exclude *.pyc
 global-exclude *.pyo
 global-exclude *.un~
