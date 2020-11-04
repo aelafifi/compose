@@ -9,7 +9,7 @@
 
       <template v-for="action in wholeProjectActions">
         <IconButtonWithTooltip
-            :key="action.icon" :icon="action.icon" :tooltip="action.tooltip"
+            :key="action.tooltip" :icon="action.icon" :iconClass="action.iconClass" :tooltip="action.tooltip"
             @click.ctrl.exact="performRequest(project, 'runAction', action.click, undefined, true)"
             @click.exact="performRequest(project, 'runAction', action.click)"></IconButtonWithTooltip>
       </template>
@@ -28,8 +28,8 @@
 
                 <template v-for="action in wholeProjectActions">
                   <IconButtonWithTooltip
-                      v-if="action.acceptsServiceNames"
-                      :key="action.icon" :icon="action.icon" :tooltip="action.tooltip"
+                      v-if="action.acceptsServiceNames && action.visible(project)"
+                      :key="action.tooltip" :icon="action.icon" :iconClass="action.iconClass" :tooltip="action.tooltip"
                       @click.ctrl.exact="performRequest(project, 'runAction', action.click, selectedServices, true)"
                       @click.exact="performRequest(project, 'runAction', action.click, selectedServices)"></IconButtonWithTooltip>
                 </template>
@@ -54,7 +54,7 @@
                 </thead>
                 <tbody>
                 <template v-for="service in project.services">
-                  <tr v-if="search.matchesSearch(service.name) || search.matchingSearch(service.containers).length > 0"
+                  <tr v-if="search.matchesSearch(service.name) || search.matchingSearch(service.containers, 'name').length > 0"
                       :key="service.name">
                     <td style="width: 1px">
                       <v-checkbox v-model="selectedServices" :value="service.name"></v-checkbox>
@@ -65,14 +65,14 @@
                     <td class="text-right" colspan="5">
                       <template v-for="action in wholeProjectActions">
                         <IconButtonWithTooltip
-                            v-if="action.acceptsServiceNames && project.isVisibleForSingleService(service, action.click)"
-                            :key="action.icon" :icon="action.icon" :tooltip="action.tooltip"
+                            v-if="action.acceptsServiceNames && action.visible(service)"
+                            :key="action.tooltip" :icon="action.icon" :iconClass="action.iconClass" :tooltip="action.tooltip"
                             @click.ctrl.exact="performRequest(project, 'runAction', action.click, [service.name], true)"
                             @click.exact="performRequest(project, 'runAction', action.click, [service.name])"></IconButtonWithTooltip>
                       </template>
                     </td>
                   </tr>
-                  <tr v-for="container in search.matchingSearch(service.containers)" :key="container.id">
+                  <tr v-for="container in search.matchingSearch(service.containers, 'name')" :key="container.id">
                     <td colspan="2">
                       <span style="display: inline-block; width: 60px"></span>
                     </td>

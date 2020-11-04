@@ -35,4 +35,53 @@ export class Service {
         const requester = () => axios.post('/api/services/' + this.name + '/scale-up');
         return observableFromRequest(requester);
     }
+
+    get countContainers() {
+        return this.containers.length;
+    }
+
+    get hasPaused() {
+        for (let cnt of this.containers) {
+            if (cnt.is_running && cnt.is_paused) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    get hasUnpaused() {
+        for (let cnt of this.containers) {
+            if (cnt.is_running && !cnt.is_paused) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    get hasRunning() {
+        for (let cnt of this.containers) {
+            if (cnt.is_running) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    get hasStopped() {
+        for (let cnt of this.containers) {
+            if (!cnt.is_running) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    get hasRestarting() {
+        for (let cnt of this.containers) {
+            if (cnt.is_restarting) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -145,5 +145,5 @@ def run_command(cmd: list):
 
 
 def run_command_and_wait(cmd: list):
-    full_cmd = ' '.join([*cmd, '&& echo -e -n "\\nPress ENTER to exit." && read'])
+    full_cmd = ' '.join([*cmd, '; echo -e -n "\\nPress ENTER to exit." ; read'])
     return subprocess.call(['gnome-terminal', '--', 'bash', '-c', full_cmd])

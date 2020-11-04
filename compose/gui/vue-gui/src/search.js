@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export class SearchManager {
     constructor() {
         this.searchText = "";
@@ -22,6 +20,6 @@ export class SearchManager {
     }
 
     matchingSearch(arr, mapper) {
-        return _.map(arr, mapper).filter(item => this.matchesSearch(item));
+        return arr.filter(item => this.matchesSearch(mapper ? item[mapper] : item));
     }
 }

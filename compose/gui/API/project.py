@@ -1,5 +1,4 @@
 import asyncio
-import subprocess
 
 from fastapi import APIRouter, Request
 from sse_starlette.sse import EventSourceResponse
@@ -29,7 +28,7 @@ async def stream_project(request: Request):
 ### Simple actions
 
 
-async def perform_actions(request: Request, method_name: str, command_name: str):
+async def perform_actions(request: Request, method_name: str, command_name: str, *args):
     json_ = await request.json()
     service_names = get_service_names(json_)
     is_terminal = json_.get('terminal', False)
@@ -39,7 +38,10 @@ async def perform_actions(request: Request, method_name: str, command_name: str)
         return command
     else:
         method = getattr(get_project(request), method_name)
-        method(service_names=service_names)
+        try:
+            method(*args, service_names=service_names)
+        except:
+            method(*args, )
 
 
 @project_router.post('/start')
@@ -76,7 +78,7 @@ async def up_project(request: Request):
 
 @project_router.post('/down')
 async def down_project(request: Request):
-    return await perform_actions(request, 'down', 'down')
+    return await perform_actions(request, 'down', 'down', None, False)
 
 
 @project_router.post('/pause')
