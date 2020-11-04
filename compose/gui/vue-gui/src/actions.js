@@ -135,8 +135,8 @@ export const wholeProjectActions = [
         tooltip: "Build and Up",
         click: 'build-up',
         iconClass: 'text-info',
-        visible(service) {
-            return service.hasRunning;
+        visible(/*service*/) {
+            return true;
         },
     },
 ];
